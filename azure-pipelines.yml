@@ -1,0 +1,50 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: BuildAndTest
+  displayName: BUild and Test
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: dotnet restore
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+      feedsToUse: 'select'
+      vstsFeed: 'dca6860b-3c9a-41cf-ba8a-5bc78affe1c0/d0d1ea83-5d2c-4a72-ad4d-ff80bec0eae0'
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: dotnet test
+    inputs:
+      command: 'test'
+      projects: '**/*.Tests.csproj'
+- job: CreateNugetPackage
+  displayName: Create Nuget Package
+  dependsOn: BuildAndTest
+  condition: succeeded()
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: dotnet pack
+    inputs:
+      command: 'pack'
+      packagesToPack: '**/Test.Core.csproj'
+      versioningScheme: 'byBuildNumber'
+  - task: DotNetCoreCLI@2
+    displayName: dotnet push
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: 'dca6860b-3c9a-41cf-ba8a-5bc78affe1c0/d0d1ea83-5d2c-4a72-ad4d-ff80bec0eae0'
