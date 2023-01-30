@@ -20,7 +20,7 @@ jobs:
       command: 'restore'
       projects: '**/*.csproj'
       feedsToUse: 'select'
-      vstsFeed: 'dca6860b-3c9a-41cf-ba8a-5bc78affe1c0/d0d1ea83-5d2c-4a72-ad4d-ff80bec0eae0'
+      vstsFeed: 'dca6860b-3c9a-41cf-ba8a-5bc78affe1c0/5af53f39-fc6a-4b6e-a2c3-a663c3d04ebd'
   - task: DotNetCoreCLI@2
     displayName: dotnet build
     inputs:
@@ -48,4 +48,4 @@ jobs:
       command: 'push'
       packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
       nuGetFeedType: 'internal'
-      publishVstsFeed: 'dca6860b-3c9a-41cf-ba8a-5bc78affe1c0/d0d1ea83-5d2c-4a72-ad4d-ff80bec0eae0'
+      publishVstsFeed: 'dca6860b-3c9a-41cf-ba8a-5bc78affe1c0/5af53f39-fc6a-4b6e-a2c3-a663c3d04ebd'
